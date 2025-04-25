@@ -22,10 +22,9 @@ public class ProductController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Product> findById(@PathVariable Long id){
-        return productService.findById(id)
-                .map(ResponseEntity::ok)
-                .orElse(ResponseEntity.notFound().build());
+    public ResponseEntity<?> findById(@PathVariable Long id){
+        Product product = productService.findById(id);
+        return ResponseEntity.ok(product);
     }
 
     @PostMapping
@@ -40,8 +39,4 @@ public class ProductController {
         return ResponseEntity.noContent().build();
     }
 
-//    @PutMapping("/{id}")
-//    public ResponseEntity<Product> update(@PathVariable Long id, @RequestBody Product product){
-//
-//    }
 }
