@@ -2,12 +2,14 @@ package com.example.restful_api.model;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @AllArgsConstructor
 @NoArgsConstructor
 @Data
+@Builder
 @Entity
 @Table(name = "users")
 public class User {
@@ -21,4 +23,5 @@ public class User {
 
     @Column(nullable = false)
     private String password;
+
 }
