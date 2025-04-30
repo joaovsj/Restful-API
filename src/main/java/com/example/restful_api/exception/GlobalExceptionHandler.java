@@ -22,16 +22,16 @@ public class GlobalExceptionHandler {
         body.put("message", ex.getMessage());
         return new ResponseEntity<>(body, HttpStatus.NOT_FOUND);
     }
-//
-//    @ExceptionHandler(BadCredentialsException.class)
-//    public ResponseEntity<Object> handleBadRequest(BadCredentialsException ex){
-//        Map<String, Object> body = new LinkedHashMap<>();
-//        body.put("timestamp", LocalDateTime.now());
-//        body.put("status", HttpStatus.UNAUTHORIZED.value());
-//        body.put("error", "Bad credentials!");
-//        body.put("message", ex.getMessage());
-//        return new ResponseEntity<>(body, HttpStatus.UNAUTHORIZED);
-//    }
+
+    @ExceptionHandler(BadCredentialsException.class)
+    public ResponseEntity<Object> handleBadRequest(BadCredentialsException ex){
+        Map<String, Object> body = new LinkedHashMap<>();
+        body.put("timestamp", LocalDateTime.now());
+        body.put("status", HttpStatus.UNAUTHORIZED.value());
+        body.put("error", "Bad credentials!");
+        body.put("message", ex.getMessage());
+        return new ResponseEntity<>(body, HttpStatus.UNAUTHORIZED);
+    }
 
     @ExceptionHandler(Exception.class)
     public ResponseEntity<Object> handleGenericException(Exception ex){
