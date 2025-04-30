@@ -11,15 +11,16 @@ import java.util.Date;
 public class JwtUtil {
 
     // chave para fazer a criptografia
-    private static final Key key = Keys.secretKeyFor(SignatureAlgorithm.ES256);
+    private static final Key key = Keys.secretKeyFor(SignatureAlgorithm.HS256);
     private static final long EXPIRATION_TIME = 86400000;
 
     // gera o token
     public static String generateToken(String username) {
+
         return Jwts.builder()
                 .setSubject(username)
                 .setExpiration(new Date(System.currentTimeMillis() + EXPIRATION_TIME))
-                .signWith(key, SignatureAlgorithm.ES256)
+                .signWith(key, SignatureAlgorithm.HS256)
                 .compact();
     }
 

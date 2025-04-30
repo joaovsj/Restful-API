@@ -5,6 +5,8 @@ import com.example.restful_api.security.JwtUtil;
 import com.example.restful_api.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.crypto.factory.PasswordEncoderFactories;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -19,6 +21,7 @@ import java.util.Optional;
 public class AuthController {
 
     private final UserService userService;
+    private final PasswordEncoder encoder = PasswordEncoderFactories.createDelegatingPasswordEncoder();
 
     @PostMapping("/register")
     public ResponseEntity<?> register(@RequestBody Map<String, String> request){
@@ -30,14 +33,11 @@ public class AuthController {
     @PostMapping("/login")
     public ResponseEntity<?> login(@RequestBody Map<String, String> request){
 
-        Optional<User> user = userService.findByUsername(request.get("username"));
+        User user = userService.authenticate(request.get("username"), request.get("password"));
+        String token = JwtUtil.generateToken(user.getUsername());
+        return ResponseEntity.ok(Map.of("token", token));
 
-        if (user.isPresent() && user.get().getPassword().equals(request.get("password"))){
-
-            String token = JwtUtil.generateToken(user.get().getUsername());
-            return ResponseEntity.ok(Map.of("token", token));
-        }
-
-        return ResponseEntity.status(401).body("Credenciais inválidas");
+//        return ResponseEntity.status(401).body("Credenciais inválidas");
     }
+
 }
