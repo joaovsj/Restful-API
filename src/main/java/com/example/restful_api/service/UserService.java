@@ -30,14 +30,14 @@ public class UserService {
         return userRepository.save(user);
     }
 
-//    public User authenticate(String username, String password){
-//
-//        User user = userRepository.findByUsername(username)
-//                .orElseThrow(() -> new ItemNotFoundException("User not found"));
-//
-//        if(!passwordEncoder.matches(password, user.getPassword())){
-//            throw new BadCredentialsException("Credenciais inválidas");
-//        }
-//        return user;
-//    }
+    public User authenticate(String username, String password){
+
+        User user = userRepository.findByUsername(username)
+                .orElseThrow(() -> new ItemNotFoundException("User not found"));
+
+        if(!passwordEncoder.matches(password, user.getPassword())){
+            throw new BadCredentialsException("Credenciais inválidas");
+        }
+        return user;
+    }
 }
