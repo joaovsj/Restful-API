@@ -45,7 +45,7 @@ class ProductRepositoryTest {
     }
 
     @Test
-    @DisplayName("Find all returns Empty list")
+    @DisplayName("List all returns empty list")
     void list_returnsEmptyList(){
         List<Product> products = productRepository.findAll();
         Assertions.assertNotNull(products);
@@ -74,5 +74,16 @@ class ProductRepositoryTest {
 
         Assertions.assertNotNull(productFound);
         Assertions.assertEquals(productFound.get().getName(), secondProduct.getName());
+    }
+
+    @Test
+    @DisplayName("Delete should remove Product by id")
+    void delete_removeProduct(){
+        Product productToBeSaved = ProductCreator.createProduct();
+        Product productSaved     = productRepository.save(productToBeSaved);
+
+        productRepository.deleteById(productSaved.getId());
+        Optional<Product> productOptional = productRepository.findById(productSaved.getId());
+        Assertions.assertTrue(productOptional.isEmpty());
     }
 }
