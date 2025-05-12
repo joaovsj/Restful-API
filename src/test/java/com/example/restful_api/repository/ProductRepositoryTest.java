@@ -12,7 +12,7 @@ import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import java.util.List;
 import java.util.Optional;
 
-@DataJpaTest
+@DataJpaTest // apenas deve ser usado para testar os Repositories
 @DisplayName("Testing ProductRepository")
 @Log4j2
 class ProductRepositoryTest {
