@@ -33,7 +33,7 @@ class ProductServiceTest {
 
         BDDMockito.when(productRepository.findAll()).thenReturn(List.of(product));
         BDDMockito.when(productRepository.findById(ArgumentMatchers.anyLong())).thenReturn(Optional.of(product));
-//        BDDMockito.when(productRepository.save(ArgumentMatchers.any(Product.class))).thenReturn(product);
+        BDDMockito.when(productRepository.save(ArgumentMatchers.any(Product.class))).thenReturn(product);
 //        BDDMockito.doNothing().when(productRepository).deleteById(ArgumentMatchers.anyLong());
     }
 
@@ -53,6 +53,16 @@ class ProductServiceTest {
     @DisplayName("findById returns a product")
     void findById_returnsProduct(){
         Product product = productService.findById(1L);
+
+        Assertions.assertThat(product).isNotNull();
+        Assertions.assertThat(product.getName()).isEqualTo("Milk");
+    }
+
+    @Test
+    @DisplayName("save method persists product and return the same one with ID")
+    void save_persistsProduct(){
+
+        Product product = productService.save(new Product(1L, "Milk", 5D));
 
         Assertions.assertThat(product).isNotNull();
         Assertions.assertThat(product.getName()).isEqualTo("Milk");
