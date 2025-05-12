@@ -12,11 +12,12 @@ import org.mockito.BDDMockito;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import java.util.List;
 import java.util.Optional;
 
-@ExtendWith(MockitoExtension.class) // configura corretamente os Mocks para testes Isolados
+@ExtendWith(SpringExtension.class) // configura o SpringContext para os tests
 class ProductServiceTest {
 
     @InjectMocks
@@ -32,8 +33,8 @@ class ProductServiceTest {
 
         BDDMockito.when(productRepository.findAll()).thenReturn(List.of(product));
         BDDMockito.when(productRepository.findById(ArgumentMatchers.anyLong())).thenReturn(Optional.of(product));
-        BDDMockito.when(productRepository.save(ArgumentMatchers.any(Product.class))).thenReturn(product);
-        BDDMockito.doNothing().when(productRepository).deleteById(ArgumentMatchers.anyLong());
+//        BDDMockito.when(productRepository.save(ArgumentMatchers.any(Product.class))).thenReturn(product);
+//        BDDMockito.doNothing().when(productRepository).deleteById(ArgumentMatchers.anyLong());
     }
 
     @Test
@@ -46,6 +47,15 @@ class ProductServiceTest {
                 .isNotEmpty()
                 .isNotNull()
                 .hasSize(1);
+    }
+
+    @Test
+    @DisplayName("findById returns a product")
+    void findById_returnsProduct(){
+        Product product = productService.findById(1L);
+
+        Assertions.assertThat(product).isNotNull();
+        Assertions.assertThat(product.getName()).isEqualTo("Milk");
     }
 
 }
