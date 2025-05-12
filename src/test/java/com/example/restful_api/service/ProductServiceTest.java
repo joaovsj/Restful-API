@@ -34,7 +34,8 @@ class ProductServiceTest {
         BDDMockito.when(productRepository.findAll()).thenReturn(List.of(product));
         BDDMockito.when(productRepository.findById(ArgumentMatchers.anyLong())).thenReturn(Optional.of(product));
         BDDMockito.when(productRepository.save(ArgumentMatchers.any(Product.class))).thenReturn(product);
-//        BDDMockito.doNothing().when(productRepository).deleteById(ArgumentMatchers.anyLong());
+        BDDMockito.when(productRepository.existsById(ArgumentMatchers.anyLong())).thenReturn(true);
+        BDDMockito.doNothing().when(productRepository).deleteById(ArgumentMatchers.any(Long.class));
     }
 
     @Test
@@ -66,6 +67,12 @@ class ProductServiceTest {
 
         Assertions.assertThat(product).isNotNull();
         Assertions.assertThat(product.getName()).isEqualTo("Milk");
+    }
+
+    @Test
+    @DisplayName("deleteById method removes product")
+    void deleteById(){
+        Assertions.assertThatCode(() -> productService.deleteById(1L)).doesNotThrowAnyException();
     }
 
 }
