@@ -1,5 +1,6 @@
 package com.example.restful_api.service;
 
+import com.example.restful_api.exception.ItemNotFoundException;
 import com.example.restful_api.model.User;
 import com.example.restful_api.repository.UserRepository;
 import org.assertj.core.api.Assertions;
@@ -66,4 +67,13 @@ class UserServiceTest {
         Assertions.assertThat(userAuthenticated).isNotNull();
         Assertions.assertThat(userAuthenticated.getUsername()).isEqualTo(name);
     }
+
+    @Test
+    void authenticate_throwItemNotFoundException() {
+        BDDMockito.when(userRepository.findByUsername(ArgumentMatchers.anyString())).thenThrow(ItemNotFoundException.class);
+        Assertions.assertThatExceptionOfType(ItemNotFoundException.class)
+                .isThrownBy(() -> userService.authenticate("Romario", "Da leste"));
+    }
+
+
 }
