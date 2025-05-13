@@ -14,6 +14,8 @@ import org.mockito.Mock;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
+import java.util.Optional;
+
 @ExtendWith(SpringExtension.class)
 class UserServiceTest {
 
@@ -28,13 +30,14 @@ class UserServiceTest {
 
     @BeforeEach
     void setUp() {
-
         User user = new User();
         user.setUsername("Tenza");
         user.setPassword("encrypted");
 
-        BDDMockito.when(userRepository.save(ArgumentMatchers.any(User.class))).thenReturn(user);
         BDDMockito.when(passwordEncoder.encode(ArgumentMatchers.anyString())).thenReturn("encrypted");
+        BDDMockito.when(userRepository.save(ArgumentMatchers.any(User.class))).thenReturn(user);
+//        BDDMockito.when(userRepository.findByUsername(ArgumentMatchers.anyString())).thenReturn(Optional.of(user));
+//        BDDMockito.when(passwordEncoder.matches(ArgumentMatchers.anyString(),ArgumentMatchers.anyString())).thenReturn(true);
     }
 
     @Test
@@ -50,6 +53,12 @@ class UserServiceTest {
     }
 
     @Test
-    void authenticate() {
+    void authenticate_returnsUser() {
+        String name = "Tenza";
+        String password = "12345";
+
+        User user = userService.authenticate(name, password);
+
+        Assertions.assertThat(user).isNotNull();
     }
 }
