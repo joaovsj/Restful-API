@@ -12,6 +12,7 @@ import org.mockito.ArgumentMatchers;
 import org.mockito.BDDMockito;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
@@ -69,11 +70,21 @@ class UserServiceTest {
     }
 
     @Test
+    @DisplayName("authenticate method throws ItemNotFoundException when name is invalid")
     void authenticate_throwItemNotFoundException() {
         BDDMockito.when(userRepository.findByUsername(ArgumentMatchers.anyString())).thenThrow(ItemNotFoundException.class);
         Assertions.assertThatExceptionOfType(ItemNotFoundException.class)
                 .isThrownBy(() -> userService.authenticate("Romario", "Da leste"));
     }
 
+    @Test
+    @DisplayName("authenticate method throws BadCredetialsException when data are invalid")
+    void authenticate_throwsBadCredentialsException() {
 
+        BDDMockito.when(passwordEncoder.matches("invalidPassword", "encryptedPassword"))
+            .thenThrow(BadCredentialsException.class);
+
+        Assertions.assertThatExceptionOfType(BadCredentialsException.class)
+                .isThrownBy(() -> userService.authenticate("romarinhho", "invalidPassword"));
+    }
 }
