@@ -36,8 +36,7 @@ class UserServiceTest {
 
         BDDMockito.when(passwordEncoder.encode(ArgumentMatchers.anyString())).thenReturn("encrypted");
         BDDMockito.when(userRepository.save(ArgumentMatchers.any(User.class))).thenReturn(user);
-//        BDDMockito.when(userRepository.findByUsername(ArgumentMatchers.anyString())).thenReturn(Optional.of(user));
-//        BDDMockito.when(passwordEncoder.matches(ArgumentMatchers.anyString(),ArgumentMatchers.anyString())).thenReturn(true);
+        BDDMockito.when(userRepository.findByUsername(ArgumentMatchers.anyString())).thenReturn(Optional.of(user));
     }
 
     @Test
@@ -53,12 +52,18 @@ class UserServiceTest {
     }
 
     @Test
+    @DisplayName("authenticate works for the correct credentials")
     void authenticate_returnsUser() {
         String name = "Tenza";
         String password = "12345";
+        String encryptedPassword = "encrypted";
 
-        User user = userService.authenticate(name, password);
+        BDDMockito.when(passwordEncoder.matches("12345", encryptedPassword))
+                .thenReturn(true);
 
-        Assertions.assertThat(user).isNotNull();
+        User userAuthenticated = userService.authenticate(name, password);
+
+        Assertions.assertThat(userAuthenticated).isNotNull();
+        Assertions.assertThat(userAuthenticated.getUsername()).isEqualTo(name);
     }
 }
