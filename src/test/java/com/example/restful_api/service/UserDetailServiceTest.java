@@ -12,6 +12,7 @@ import org.mockito.BDDMockito;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import java.util.Optional;
@@ -42,5 +43,14 @@ class UserDetailServiceTest {
 
         Assertions.assertThat(userDetails).isNotNull();
         Assertions.assertThat(userDetails.getUsername()).isEqualTo("Tenza");
+    }
+
+    @Test
+    @DisplayName("loadByUserName should throw Exception when User is not found")
+    void loadByUserName_throwsExceptionWhenUserIsNotFound() {
+        BDDMockito.when(userRepository.findByUsername("Gabimaru")).thenThrow(new UsernameNotFoundException("Gabimaru"));
+
+        Assertions.assertThatExceptionOfType(UsernameNotFoundException.class)
+                .isThrownBy(() -> userDetailsService.loadUserByUsername("Gabimaru"));
     }
 }
