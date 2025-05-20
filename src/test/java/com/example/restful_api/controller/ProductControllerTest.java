@@ -39,7 +39,7 @@ class ProductControllerTest {
 
         BDDMockito.when(productService.listProducts()).thenReturn(List.of(product));
         BDDMockito.when(productService.findById(1L)).thenReturn(product);
-        BDDMockito.when(productService.save(product)).thenReturn(product);
+        BDDMockito.when(productService.save(ArgumentMatchers.any(Product.class))).thenReturn(product);
         BDDMockito.doNothing().when(productService).deleteById(ArgumentMatchers.anyLong());
     }
 
@@ -59,6 +59,20 @@ class ProductControllerTest {
         ResponseEntity<?> productResponse = productController.findById(1L);
         Assertions.assertThat(productResponse.getBody()).isNotNull();
         Assertions.assertThat(productResponse.getStatusCode()).isEqualTo(HttpStatus.OK);
+    }
+
+    @Test
+    @DisplayName("create should save the product")
+    void create_shouldReturnProduct(){
+
+        Product product = new Product();
+        product.setName("Coffee");
+        product.setPrice(31D);
+
+        ResponseEntity<Product> productResponse = productController.create(product);
+        Assertions.assertThat(productResponse.getBody()).isNotNull();
+        Assertions.assertThat(productResponse.getBody().getName()).isEqualTo("Coffee");
+        Assertions.assertThat(productResponse.getStatusCode()).isEqualTo(HttpStatus.CREATED);
     }
 
 
