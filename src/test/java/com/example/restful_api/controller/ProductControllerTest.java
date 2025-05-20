@@ -53,7 +53,13 @@ class ProductControllerTest {
         Assertions.assertThat(products.get(0).getName()).isEqualTo("Coffee");
     }
 
-
+    @Test
+    @DisplayName("FindById should return the right product")
+    void findById_shouldReturnProduct(){
+        ResponseEntity<?> productResponse = productController.findById(1L);
+        Assertions.assertThat(productResponse.getBody()).isNotNull();
+        Assertions.assertThat(productResponse.getStatusCode()).isEqualTo(HttpStatus.OK);
+    }
 
 
 }
