@@ -10,6 +10,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.BDDMockito;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
@@ -32,6 +33,7 @@ class AuthControllerTest {
         user.setPassword("12345");
 
         BDDMockito.when(userService.register("Ainz", "12345")).thenReturn(user);
+        BDDMockito.when(userService.authenticate("Ainz", "12345")).thenReturn(user);
     }
 
     @Test
@@ -44,5 +46,16 @@ class AuthControllerTest {
         Assertions.assertThat(userAuthenticated).isNotNull();
         System.out.println(userAuthenticated.getBody());
 
+    }
+
+    @Test
+    @DisplayName("Method responsible to login user")
+    void login_shouldAuthenticateUser(){
+
+        Map<String, String> user = Map.of("username", "Ainz", "password", "12345");
+        ResponseEntity<?> userAuthenticated = authController.login(user);
+
+        Assertions.assertThat(userAuthenticated).isNotNull();
+        Assertions.assertThat(userAuthenticated.getStatusCode()).isEqualTo(HttpStatus.OK);
     }
 }
