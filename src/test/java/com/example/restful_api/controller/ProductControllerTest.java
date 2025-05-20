@@ -2,12 +2,17 @@ package com.example.restful_api.controller;
 
 import com.example.restful_api.model.Product;
 import com.example.restful_api.service.ProductService;
+import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.ArgumentMatchers;
 import org.mockito.BDDMockito;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import java.util.ArrayList;
@@ -37,6 +42,18 @@ class ProductControllerTest {
         BDDMockito.when(productService.save(product)).thenReturn(product);
         BDDMockito.doNothing().when(productService).deleteById(ArgumentMatchers.anyLong());
     }
+
+    @Test
+    @DisplayName("List all products")
+    void list_shouldReturnAllProducts(){
+
+        List<Product> products = productController.list().getBody();
+        Assertions.assertThat(products).isNotNull().isNotEmpty();
+        Assertions.assertThat(products.size()).isEqualTo(1);
+        Assertions.assertThat(products.get(0).getName()).isEqualTo("Coffee");
+    }
+
+
 
 
 }
