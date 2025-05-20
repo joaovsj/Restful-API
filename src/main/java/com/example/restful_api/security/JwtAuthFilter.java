@@ -33,8 +33,8 @@ public class JwtAuthFilter extends OncePerRequestFilter {
         }
 
         // caso haja o token ele extrai
-        String token    = authRequest.substring(7);  // removes "Bearer "
-        String username =  JwtUtil.extractUsername(token);
+        String token = authRequest.substring(7);  // removes "Bearer "
+        String username = JwtUtil.extractUsername(token);
 
         // garante que o usuário não está já autenticado.
         if (username != null && SecurityContextHolder.getContext().getAuthentication() == null) {
@@ -42,7 +42,7 @@ public class JwtAuthFilter extends OncePerRequestFilter {
             // interface do próprio java que retorna detalhes sobre os usuários(está linkada com seu UserRepository)
             UserDetails userDetails = userDetailsService.loadUserByUsername(username);
 
-            if(JwtUtil.validateToken(token)){
+            if (JwtUtil.validateToken(token)) {
                 UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
                 SecurityContextHolder.getContext().setAuthentication(authToken);
             }

@@ -24,7 +24,7 @@ public class AuthController {
     private final PasswordEncoder encoder = PasswordEncoderFactories.createDelegatingPasswordEncoder();
 
     @PostMapping("/register")
-    public ResponseEntity<?> register(@RequestBody Map<String, String> request){
+    public ResponseEntity<User> register(@RequestBody Map<String, String> request){
 
         User user = userService.register(request.get("username"),request.get("password"));
         return ResponseEntity.ok(user);
