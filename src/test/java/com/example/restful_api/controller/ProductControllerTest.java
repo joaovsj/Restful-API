@@ -75,5 +75,13 @@ class ProductControllerTest {
         Assertions.assertThat(productResponse.getStatusCode()).isEqualTo(HttpStatus.CREATED);
     }
 
+    @Test
+    @DisplayName("Delete removes product when successful")
+    void delete_removesAnime_WhenSuccessful() {
+        ResponseEntity<Void> productResponse = productController.delete(1L);
+
+        Assertions.assertThat(productResponse).isNotNull();
+        Assertions.assertThat(productResponse.getStatusCode()).isEqualTo(HttpStatus.NO_CONTENT);
+    }
 
 }
