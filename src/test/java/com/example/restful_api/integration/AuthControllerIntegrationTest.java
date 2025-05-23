@@ -62,4 +62,14 @@ public class AuthControllerIntegrationTest {
 
         Assertions.assertThat(loginResponse.getStatusCode()).isEqualTo(HttpStatus.UNAUTHORIZED);
     }
+
+
+    @Test
+    void shouldLoginSuccessfully(){
+        Map<String, String> user = Map.of("username", "Phillip", "password", "12345");
+        restTemplate.postForEntity(baseUrl+"/register", user, User.class);
+
+        ResponseEntity<String> loginResponse = restTemplate.postForEntity(baseUrl+"/login", user, String.class);
+        Assertions.assertThat(loginResponse.getStatusCode()).isEqualTo(HttpStatus.OK);
+    }
 }
