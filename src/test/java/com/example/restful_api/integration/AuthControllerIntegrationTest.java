@@ -43,11 +43,23 @@ public class AuthControllerIntegrationTest {
 
     @Test
     void shouldResgisterSucessfully(){
-
         Map<String, String> user = Map.of("username", "john", "password", "12345");
         ResponseEntity<User> request = restTemplate.postForEntity(baseUrl+"/register", user, User.class);
 
         Assertions.assertThat(request.getStatusCode()).isEqualTo(HttpStatus.OK);
         Assertions.assertThat(userRepository.findByUsername("john")).isPresent();
+    }
+
+    @Test
+    void shouldLoginFailed(){
+        Map<String, String> user = Map.of("username", "pedro", "password", "12345");
+        ResponseEntity<User> request = restTemplate.postForEntity(baseUrl+"/register", user, User.class);
+
+        Map<String, String> wrongUser = Map.of("username", "pedro", "password", "321654");
+        ResponseEntity<String> loginResponse = restTemplate.postForEntity(baseUrl+"/login", wrongUser, String.class);
+
+        log.info(loginResponse);
+
+        Assertions.assertThat(loginResponse.getStatusCode()).isEqualTo(HttpStatus.UNAUTHORIZED);
     }
 }
