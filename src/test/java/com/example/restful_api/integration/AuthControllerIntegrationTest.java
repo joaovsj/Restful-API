@@ -14,14 +14,11 @@ import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.boot.test.web.server.LocalServerPort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.test.annotation.DirtiesContext;
-import org.springframework.web.client.RestTemplate;
 
 import java.util.Map;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT) // always uses a ramdom port
 @AutoConfigureTestDatabase // uses h2
-//@DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD)
 @Log4j2
 public class AuthControllerIntegrationTest {
 
@@ -57,8 +54,6 @@ public class AuthControllerIntegrationTest {
 
         Map<String, String> wrongUser = Map.of("username", "pedro", "password", "321654");
         ResponseEntity<String> loginResponse = restTemplate.postForEntity(baseUrl+"/login", wrongUser, String.class);
-
-        log.info(loginResponse);
 
         Assertions.assertThat(loginResponse.getStatusCode()).isEqualTo(HttpStatus.UNAUTHORIZED);
     }
