@@ -57,9 +57,7 @@ public class ProductControllerIntegrationTest {
     @Test
     void create_shouldCreateValidProduct() {
 
-        Product product = new Product();
-        product.setName("Coffee");
-        product.setPrice(25D);
+        Product product = new Product(null, "Coffee", 25D);
 
         HttpEntity<Product> request = new HttpEntity<>(product, headers);
 
@@ -70,11 +68,11 @@ public class ProductControllerIntegrationTest {
 
     @Test
     void list_shouldReturnListOfProducts() {
-        Product product = new Product();
-        product.setName("Coffee");
-        product.setPrice(25D);
 
-        productRepository.save(product);
+        if(productRepository.findAll().isEmpty()){
+            Product product = new Product(null, "Toddy", 6D);
+            productRepository.save(product);
+        }
 
         HttpEntity<Void> request = new HttpEntity<>(headers);
         ResponseEntity<Product[]> listProducts = restTemplate.exchange(productUrl + "/", HttpMethod.GET, request, Product[].class);
