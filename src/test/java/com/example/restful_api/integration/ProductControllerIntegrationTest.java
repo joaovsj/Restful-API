@@ -94,4 +94,16 @@ public class ProductControllerIntegrationTest {
         Assertions.assertThat(productResponse.getBody().getName()).isEqualTo(savedProduct.getName());
     }
 
+    @Test
+    void delete_shouldRemoveProduct(){
+        Product product = new Product(null, "Meat", 20D);
+        Product savedProduct = productRepository.save(product);
+
+        HttpEntity<Void> request = new HttpEntity<>(headers);
+        ResponseEntity<Void> content = restTemplate.exchange(productUrl + "/" + savedProduct.getId(), HttpMethod.DELETE, request, Void.class);
+
+        Assertions.assertThat(content.getStatusCode()).isEqualTo(HttpStatus.NO_CONTENT);
+        Assertions.assertThat(content.getBody()).isNull();
+        Assertions.assertThat(productRepository.findById(savedProduct.getId())).isEmpty();
+    }
 }
