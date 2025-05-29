@@ -82,4 +82,16 @@ public class ProductControllerIntegrationTest {
         Assertions.assertThat(Objects.requireNonNull(listProducts.getBody()).length).isEqualTo(1);
     }
 
+    @Test
+    void findById_shouldReturnAccurateProduct(){
+        Product product = new Product(null, "Milk", 6D);
+        Product savedProduct = productRepository.save(product);
+
+        HttpEntity<Void> request = new HttpEntity<>(headers);
+        ResponseEntity<Product> productResponse = restTemplate.exchange(productUrl + "/" + savedProduct.getId(), HttpMethod.GET, request, Product.class);
+
+        Assertions.assertThat(productResponse.getStatusCode()).isEqualTo(HttpStatus.OK);
+        Assertions.assertThat(productResponse.getBody().getName()).isEqualTo(savedProduct.getName());
+    }
+
 }
