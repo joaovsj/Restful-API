@@ -14,6 +14,7 @@ import org.springframework.boot.test.web.server.LocalServerPort;
 import org.springframework.http.*;
 
 import java.util.Map;
+import java.util.Objects;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @AutoConfigureTestDatabase
@@ -33,8 +34,11 @@ public class ProductControllerIntegrationTest {
 
     private String token;
 
+    private HttpHeaders headers;
+
+
     @BeforeEach
-    void setUp(){
+    void setUp() {
 
         String authUrl = "http://localhost:" + port + "/auth";
         productUrl = "http://localhost:" + port + "/api/products";
@@ -45,24 +49,37 @@ public class ProductControllerIntegrationTest {
         ResponseEntity<Map> loginResponse = restTemplate.postForEntity(authUrl + "/login", user, Map.class);
         token = loginResponse.getBody().get("token").toString();
 
+        headers = new HttpHeaders();
+        headers.setBearerAuth(token);
+        headers.setContentType(MediaType.APPLICATION_JSON);
     }
 
     @Test
-    void create_shouldCreateValidProduct(){
+    void create_shouldCreateValidProduct() {
 
         Product product = new Product();
         product.setName("Coffee");
         product.setPrice(25D);
-
-        HttpHeaders headers = new HttpHeaders();
-        headers.setBearerAuth(token);
-        headers.setContentType(MediaType.APPLICATION_JSON);
 
         HttpEntity<Product> request = new HttpEntity<>(product, headers);
 
         ResponseEntity<Product> createProduct = restTemplate.postForEntity(productUrl, request, Product.class);
         Assertions.assertThat(createProduct.getStatusCode()).isEqualTo(HttpStatus.CREATED);
         Assertions.assertThat(productRepository.findAll().size()).isEqualTo(1);
+    }
+
+    @Test
+    void list_shouldReturnListOfProducts() {
+        Product product = new Product();
+        product.setName("Coffee");
+        product.setPrice(25D);
+
+        productRepository.save(product);
+
+        HttpEntity<Void> request = new HttpEntity<>(headers);
+        ResponseEntity<Product[]> listProducts = restTemplate.exchange(productUrl + "/", HttpMethod.GET, request, Product[].class);
+        Assertions.assertThat(listProducts.getStatusCode()).isEqualTo(HttpStatus.OK);
+        Assertions.assertThat(Objects.requireNonNull(listProducts.getBody()).length).isEqualTo(1);
     }
 
 }
